@@ -1,0 +1,29 @@
+services:
+  ollama:
+    container_name: Ollama
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    volumes:
+      - ../Ollama_models:/root/.ollama
+    healthcheck:
+      #test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      test: ["CMD", "ollama", "list"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+
+  vision_script:
+    container_name: Vision-script
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile
+    volumes:
+      - /dev/video0:/dev/video0
+      - ../Scans:/usr/src/app/Scans
+    depends_on:
+      ollama:
+        condition: service_healthy

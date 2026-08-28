@@ -1,0 +1,5 @@
+ollama
+inventree
+pillow
+python-dotenv
+opencv-python-headless
